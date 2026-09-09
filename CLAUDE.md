@@ -100,7 +100,7 @@ is the variable name (grep for it). Refresh per the
 | Registry | Line (approx) | Entries | Purpose |
 |---|---|---|---|
 | `TOOLS_REGISTRY` | ~120 | 17 | Custom Tools + Connectors + Apps + MCP Servers, split by `type` |
-| `SKILLS_REGISTRY` | ~297 | 13 | Firm-enabled Claude Skills (auto-fire; excludes downloadables) |
+| `SKILLS_REGISTRY` | ~297 | 14 | Firm-enabled Claude Skills (auto-fire; excludes downloadables) |
 | `DOWNLOAD_SKILLS` | ~430 | 8 | Downloadable `.skill` files (SharePoint), rendered via `.map()` in the Skills tab |
 | `PLUGINS_REGISTRY` | ~501 | 7 | Anthropic *Claude for Financial Services* plug-ins |
 | `PROMPTS_REGISTRY` | ~570 | 13 | Prompt Library (Deep Research + Due Diligence) |
