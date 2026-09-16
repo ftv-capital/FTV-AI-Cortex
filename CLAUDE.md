@@ -3,8 +3,32 @@
 **FTV AI Cortex** is FTV Capital's internal portal that catalogs the prompts, custom
 tools, connectors, skills, plug-ins, and workflows the firm uses with Claude (and, where
 noted, ChatGPT). The live product is a single self-contained `index.html` served via
-GitHub Pages. This file orients any Claude session to the repo so facts don't have to be
-re-derived each time.
+Azure Static Web Apps behind Entra ID authentication. This file orients any Claude
+session to the repo so facts don't have to be re-derived each time.
+
+## Hosting and access (Sept 2026) — maintained by IT (Rashid)
+
+The live Cortex is hosted on Azure Static Web Apps behind Microsoft Entra ID
+authentication. It is NOT on GitHub Pages.
+
+- Live site: https://delightful-hill-00bc86810.6.azurestaticapps.net
+- Deploys via `.github/workflows/azure-static-web-apps-*.yml` on push to
+  `claude/create-react-vite-project-Px87B` (the branch Pages used to serve from,
+  now the deploy branch). Root `index.html` is uploaded as-is:
+  `skip_app_build: true` is required, because otherwise the Azure build agent
+  sees `requirements.txt`, assumes a Python app, and fails.
+- Do NOT re-enable GitHub Pages and do not suggest it as a hosting option. Pages
+  was removed deliberately and the Pages source is set to "GitHub Actions" with no
+  Pages workflow in the repo, specifically so nothing can republish it.
+- The old "nudge commit to re-trigger a stuck Pages build" trick no longer
+  applies. If a deploy fails, debug the Azure SWA workflow run instead.
+- `staticwebapp.config.json` at the repo root is the Entra auth config. Editing it
+  can take the site offline or remove the login requirement. Do not edit without IT.
+
+### Ask IT before
+- Changing anything in `.github/workflows/`
+- Adding a new published page, site, or hosting target
+- Widening who can access the site
 
 > **Keep this file current.** Treat updating CLAUDE.md as part of any cortex edit — see
 > [Self-maintenance protocol](#self-maintenance-protocol) at the bottom. The
@@ -18,11 +42,12 @@ Three **distinct, unrelated stacks** live in this repo. Know which one you're to
 
 | Path | What it is | Status |
 |---|---|---|
-| `index.html` | **THE live app.** 3,700+ line single-file React 18 + in-browser Babel SPA. No build step. Deployed via GitHub Pages. | Live — primary focus |
+| `index.html` | **THE live app.** 3,700+ line single-file React 18 + in-browser Babel SPA. No build step. Deployed via Azure Static Web Apps (Entra-gated). | Live — primary focus |
 | `streamlit_app.py`, `sourcing_dashboard.py` | Separate Streamlit + Snowflake "sourcing dashboard" (Python). Deps in `requirements.txt` / `environment.yml`. | Separate app |
 | `ai-cortex/` | Fresh Vite + React 19 scaffold. Intended as an eventual rewrite of `index.html`, but currently **untouched boilerplate** (default counter demo). | Not live — scaffold only |
 
-There is no root `package.json`, no root README, and **no `.github/` CI workflow**.
+There is no root `package.json` and no root README. There is one `.github/` CI workflow:
+the Azure Static Web Apps deploy.
 
 ---
 
@@ -158,10 +183,10 @@ them first when the app won't render:
 
 - **Branches:** Claude works on `claude/…`-prefixed branches; open a PR rather than
   pushing to the base/deploy branch directly (a guardrail blocks direct pushes there).
-- **GitHub Pages** serves the root `index.html` via **"Deploy from a branch"** (there is
-  no Actions workflow file). Merging into the Pages source branch triggers a fresh
-  deployment; edits aren't live until then. Pages builds have occasionally gotten stuck
-  in `queued` — a trivial nudge commit/PR to the source branch re-triggers a build.
+- **Deploys** run through `.github/workflows/azure-static-web-apps-*.yml` on push to the
+  deploy branch. Merging there triggers a fresh deployment; edits aren't live until then.
+  If a deploy fails, debug that workflow run — do not reintroduce GitHub Pages (see
+  "Hosting and access" at the top).
 - **Commit signing:** commits are expected to be SSH-signed (unsigned commits show as
   "Unverified" on GitHub).
 
