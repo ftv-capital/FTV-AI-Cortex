@@ -194,7 +194,7 @@ const TOOLS_REGISTRY = [
   {
     id:"meeting-prep-notes",
     type:"Custom Tool", name:"Meeting Prep Notes on Demand", platform:"Web",
-    badge:"Available", link:"https://kscoli26.github.io/meeting-prep-bot/meeting_prep_ondemand.html",
+    badge:"Available", link:"https://mango-hill-0d5bac310.6.azurestaticapps.net/",
     desc:"Generate contextualized meeting notes for upcoming company calls. Pulls company context, recent news, and key talking points automatically.",
     note:"Generate meeting briefing notes instantly.",
     tags:["research","calls","prep"],
@@ -2359,7 +2359,7 @@ const WORKFLOWS = [
 // directions: listed in wf.toolIds, or carrying this workflow in its own workflowIds.
 // Used by the workflow card count and the workflow detail view so they always agree.
 const workflowItems = (wf) => {
-  const all  = [...TOOLS_REGISTRY, ...SKILLS_REGISTRY, ...PLUGINS_REGISTRY];
+  const all  = [...TOOLS_REGISTRY, ...SKILLS_REGISTRY, ...PLUGINS_REGISTRY, ...EXTERNAL_TOOLS];
   const seen = new Set();
   const out  = [];
   wf.toolIds.forEach(id => {
